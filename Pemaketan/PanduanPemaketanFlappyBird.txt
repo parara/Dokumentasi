@@ -1,0 +1,140 @@
+Panduan Pemaketan Maleo 
+Studi kasus memaketkan game Flappy Bird. 
+ 
+Persiapan Alat. 
+Berasumsi bahwa pembaca sudah memahami cara pemaketan sebagaimana tertulis di buku panduan pemaketan. 
+ 
+
+1. Buat direktori khusus aplikasi yang mau dipaketkan dan kemudian download kode sumber, dan hapus folder .git. 
+$ git clone https://github.com/nebez/floppybird flappybird 
+$ cd flappybird/ 
+$ rm ­rf .git 
+$ rm .gitattributes 
+$ rm .gitignore 
+
+2. Lakukan konfigurasi minimal. 
+   a. Buatlah file config.xml! 
+ 	$ cd flappybird
+	$ nano config.xml  
+Isi Sebagai Berikut:
+<?xml version="1.0" encoding="UTF-8"?>
+<!--widget xmlns="http://www.w3.org/ns/widgets" xmlns:tizen="http://tizen.org/ns/widgets" id="https://github.com/01org/webapps-hangonman" version="1.0" viewmodes="fullscreen">
+<icon src="icon_128.png"/>
+<content src="index.html"/>
+<name>hangonman</name>
+<tizen:application id="nrT4AQuzWO" required_version="1.0"/>
+<tizen:setting screen-orientation="landscape" contextmenu="enable"/>
+</widget-->
+
+<widget xmlns = "http://www.w3.org/ns/widgets"
+id = ""
+version ="git"
+height = "620"
+width = "820">
+
+<name short="flappybird">
+ Flappy Bird
+ </name>
+
+<description>
+ Flappy Bird ­­­­­­­­­­­
+ ----------------
+ Webapps Games
+ </description>
+
+<author href=""></author>
+
+<icon src="icon_48.png"/>
+<content src="index.html"/>
+
+<license>GPL</license>
+</widget>
+
+Buat berkas flappybird.desktop!
+nano flappybird.desktop
+Isi sebagai berikut:
+[Desktop Entry]
+Version=1.0
+Name=Flappy Bird
+Comment=Flappy Bird HTML5
+GenericName=Flappy Bird
+Exec=maleo /usr/share/flappybird/
+Terminal=false
+X­MultipleArgs=false
+Type=Application
+Icon=flappybird
+Categories=Game;
+StartupWMClass=Maleo
+StartupNotify=true
+
+3. Setelah itu keluar dari folder flappy-bird dan kompres jadi tar.gz 
+$ cd ../ 
+$ tar ­-cf -­ flappybird/ | xz ­-9 -­c -­ > flappybird­-0.1.tar.xz  
+
+4. Masuk ke folder flappybird lagi, Lakukan dh_make dengan perintah  
+$  cd flappybird/  
+$  dh_make -­p flappy-bird_0.1 -­e monalisa.nov@gmail.com ­-f ../flappy-bird-0.1.tar.xz  
+	Tekan ‘S’ dan ‘Enter’ 
+
+$ cd debian/ 
+$ rm *.ex 
+$ rm *.EX 
+$ rm README.* 
+$ rm docs 
+
+Changelog (sesuai aturan) = ketik perintah dch ­i/­e 
+$ dch ­e 
+
+Edit file : 
+­ Copyright 
+­ Control  
+
+$ nano debian/control 
+
+Isi sebagai berikut:
+Source: flappybird
+Section: games  
+Priority: optional
+Maintainer: Mona <monalisa.nov@gmail.com>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.4
+Homepage: <insert the upstream URL, if relevant>
+#Vcs-Git: git://git.debian.org/collab-maint/flappybird.git
+#Vcs-Browser: http://git.debian.org/?p=collab-maint/flappybird.git;a=summary
+
+Package: flappybird
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: <insert up to 60 chars description>
+ <insert long description, indented with spaces>
+
+$ nano debian/install 
+ 
+Isi sebagai berikut: 
+*.html /usr/share/flappybird 
+assets /usr/share/flappybird
+css /usr/share/flappybird  
+js /usr/share/flappybird 
+config.xml /usr/share/flappybird 
+*.desktop /usr/share/applications
+
+5. Lakukan pemaketan 
+
+	$ dpkg­checkbuilddeps 
+	$ dpkg­buildpackage ­rfakeroot 
+
+6. Coba pasang game
+        $ cd ../ 
+ 	$ sudo dpkg -i flappybird_0.1-1_all.deb 
+
+7. Restart Manokwari 
+ 
+	$ killall manokwari 
+ 
+8. Jalankan Game
+
+
+
+
+
+
